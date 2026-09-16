@@ -1,0 +1,18 @@
+services:
+  timetagger-scheduler:
+    build: .
+    container_name: timetagger-scheduler
+    restart: unless-stopped
+    environment:
+      TIMETAGGER_URL: ${TIMETAGGER_URL}
+      TIMETAGGER_TOKEN: ${TIMETAGGER_TOKEN}
+      TZ: America/Chicago
+    volumes:
+      - ./config/schedule.yaml:/config/schedule.yaml:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    command: ["--config", "/config/schedule.yaml", "--interval", "21600"]
+

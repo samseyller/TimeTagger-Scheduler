@@ -1,0 +1,57 @@
+version: 1
+
+settings:
+  timezone: America/Chicago
+  generate_days_ahead: 14
+  api_timeout_seconds: 10
+  put_batch_size: 100
+
+calendar:
+  exclude_dates:
+    - 2026-11-26
+    - 2026-12-25
+
+events:
+  - id: work
+    enabled: true
+    description: "#work Work"
+    start: "08:00"
+    end: "17:00"
+    recurrence:
+      type: weekly
+      every: 1
+      weekdays: [monday, tuesday, wednesday, thursday, friday]
+    effective:
+      from: 2026-09-01
+      until: null
+    exclude_dates: []
+
+  - id: daily-example
+    enabled: false
+    description: "#example Daily example"
+    start: "07:00"
+    end: "07:30"
+    recurrence: {type: daily, every: 2}
+    effective: {from: 2026-09-01, until: null}
+
+  - id: monthly-day
+    enabled: false
+    description: "#personal Monthly task"
+    start: "09:00"
+    end: "10:00"
+    recurrence: {type: monthly, every: 1, day: 15}
+
+  - id: second-tuesday
+    enabled: false
+    description: "#work Second Tuesday task"
+    start: "13:00"
+    end: "14:00"
+    recurrence: {type: monthly, every: 1, weekday: tuesday, occurrence: 2}
+
+  - id: last-friday
+    enabled: false
+    description: "#work Last Friday task"
+    start: "15:00"
+    end: "16:00"
+    recurrence: {type: monthly, every: 1, weekday: friday, occurrence: last}
+

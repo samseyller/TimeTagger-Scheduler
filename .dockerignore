@@ -1,0 +1,9 @@
+.git
+.env
+.venv
+.pytest_cache
+.pytest-tmp
+.ruff_cache
+tests
+config/schedule.yaml
+__pycache__

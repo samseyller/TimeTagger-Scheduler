@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "timetagger-scheduler"
+version = "0.1.0"
+description = "Create-only recurring schedule materializer for TimeTagger"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31,<3",
+    "PyYAML>=6,<7",
+    "tzdata>=2025.2; platform_system == 'Windows'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "ruff>=0.8"]
+
+[project.scripts]
+timetagger-scheduler = "timetagger_scheduler.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "--basetemp=.pytest-tmp"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [".tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
