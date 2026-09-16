@@ -1,6 +1,6 @@
 # TimeTagger Scheduler
 
-TimeTagger Scheduler is a recurring schedule materializer for TimeTagger. It reads recurring schedules from YAML and creates future TimeTagger records while leaving existing records under user control.
+TimeTagger Scheduler is a recurring schedule materializer for [TimeTagger](https://github.com/almarklein/timetagger). It reads recurring schedules from YAML and creates future TimeTagger records while leaving existing records under user control.
 
 It is intentionally small: Python's standard library handles dates, timezones, recurrence, UUIDs, the CLI, and the periodic loop. The only runtime dependencies are `requests` and `PyYAML`.
 
