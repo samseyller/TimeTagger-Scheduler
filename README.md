@@ -129,6 +129,32 @@ docker compose logs -f timetagger-scheduler
 
 The image uses a slim Debian-based Python image and a non-root user. Compose mounts configuration read-only, makes the container filesystem read-only, and exposes no ports. SIGTERM interrupts the periodic wait cleanly. The one-shot materializer remains the underlying operation.
 
+## Windows Scheduled Task
+
+The task runner loads credentials from the local `.env`, invokes the project's
+virtual-environment executable, and writes daily logs under `logs/`. Test it
+without making changes:
+
+```powershell
+.\scripts\run-scheduler.ps1 -DryRun
+```
+
+Install a task that starts in one minute and repeats every 12 hours:
+
+```powershell
+.\scripts\install-scheduled-task.ps1
+```
+
+Task Scheduler is configured to start a missed run when possible and ignore a
+new trigger if the prior run is still active. To choose the first execution
+time or task name:
+
+```powershell
+.\scripts\install-scheduled-task.ps1 `
+  -TaskName "TimeTagger Scheduler" `
+  -StartAt "2026-09-16 18:00"
+```
+
 ## Development
 
 ```bash
