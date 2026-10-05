@@ -28,6 +28,18 @@ def test_valid(tmp_path):
     assert config.events[0].id == "work"
 
 
+def test_full_day_midnight(tmp_path):
+    text = BASE.replace("'08:00'", "'00:00'").replace("'17:00'", "'00:00'")
+    config = load_config(write(tmp_path, text))
+    assert config.events[0].start == config.events[0].end
+
+
+@pytest.mark.parametrize("end", ["08:00", "07:00"])
+def test_other_equal_or_overnight_times_rejected(tmp_path, end):
+    with pytest.raises(ConfigError, match="overnight"):
+        load_config(write(tmp_path, BASE.replace("'17:00'", repr(end))))
+
+
 @pytest.mark.parametrize(
     "old,new",
     [

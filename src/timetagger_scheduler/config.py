@@ -193,7 +193,7 @@ def load_config(path: str | Path) -> SchedulerConfig:
             _time(data.get("start"), f"{where}.start"),
             _time(data.get("end"), f"{where}.end"),
         )
-        if end <= start:
+        if end <= start and not start == end == time(0):
             raise ConfigError(f"{where}.end must be after start; overnight events are unsupported")
         effective_raw = _mapping(data.get("effective", {}), f"{where}.effective")
         _only(effective_raw, {"from", "until"}, f"{where}.effective")

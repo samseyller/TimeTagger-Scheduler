@@ -1,4 +1,4 @@
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -105,3 +105,24 @@ def test_dst_keeps_local_wall_clock():
     assert all(occ.start.hour == 8 for occ in occurrences)
     assert occurrences[0].start.utcoffset() != occurrences[-1].start.utcoffset()
     assert int(occurrences[-1].start.timestamp() - occurrences[0].start.timestamp()) != 14 * 86400
+
+
+def test_full_day_entries_in_recurring_weeks():
+    event = EventDefinition(
+        "full-day-event", True, "#example Full-day event", time(0), time(0),
+        RecurrenceDefinition("weekly", 3, weekdays=tuple(range(7))),
+        EffectiveRange(date(2026, 9, 14)),
+    )
+    config = SchedulerConfig(1, SchedulerSettings(TZ, 28), (event,))
+    occurrences, _ = generate_occurrences(config, datetime(2026, 10, 5, 12, tzinfo=TZ))
+    assert [occ.occurrence_date for occ in occurrences] == [
+        date(2026, 10, 5) + timedelta(days=offset)
+        for offset in [*range(7), *range(21, 28)]
+    ]
+    assert len({occ.key for occ in occurrences}) == 14
+    for occ in occurrences:
+        assert occ.end.date() == occ.start.date() + timedelta(days=1)
+        assert occ.start.time() == occ.end.time() == time(0)
+    assert occurrences[0].to_record(0).t2 - occurrences[0].to_record(0).t1 == 86400
+    # The final Sunday crosses the fall DST change and still covers the full local day.
+    assert occurrences[-1].to_record(0).t2 - occurrences[-1].to_record(0).t1 == 90000

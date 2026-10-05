@@ -58,6 +58,8 @@ def generate_occurrences(config: SchedulerConfig, now: datetime) -> tuple[list[O
                 else:
                     start = datetime.combine(candidate, event.start, config.settings.timezone)
                     end = datetime.combine(candidate, event.end, config.settings.timezone)
+                    if event.start == event.end:
+                        end += timedelta(days=1)
                     if end > local_now:
                         output.append(
                             Occurrence(

@@ -53,6 +53,14 @@ GET requests retry selected transient failures. PUT requests are never automatic
 
 Intervals greater than one require `effective.from`, which anchors the day, Monday-based week, or month interval. Unknown fields are rejected.
 
+For a full calendar-day entry, use `start: "00:00"` and `end: "00:00"`.
+The end is midnight on the following day. Other overnight intervals remain
+unsupported. To generate full-day entries during recurring weeks, use weekly
+recurrence with `every` set to the desired interval in weeks, `weekdays` set
+to the desired days, and `effective.from` set to the Sunday or Monday of the first
+active week. Calendar days span 23 or 25
+elapsed hours when daylight saving time changes.
+
 The materialization window is `[local now, local today + generate_days_ahead calendar days)`. Recurrence is calculated in the configured `zoneinfo` timezone. An event today is included if it has not ended; arbitrary history is not backfilled. Wall-clock times remain local across DST changes. Times directly inside a DST gap or ambiguous repeated hour are not specially resolved in this POC; avoid scheduling in those transition hours.
 
 ## Setup and local use
